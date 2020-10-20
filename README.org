@@ -1,0 +1,3 @@
+* Recommended introduction to SuperCollider: Bruno Ruviaro "A Gentle ..."
+
+https://ccrma.stanford.edu/~ruviaro/texts/A_Gentle_Introduction_To_SuperCollider.pdf
