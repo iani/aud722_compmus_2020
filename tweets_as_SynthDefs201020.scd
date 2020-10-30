@@ -1,5 +1,4 @@
-// Tweets from sccode
-// 19 Oct 2020 12:04
+// Repeat of 202019 tweets file, with plan to convert each tweet to a synthdef - if possible.
 // «tweets» by aucotsi on 18 Aug'11 11:23 in sctweet
 //: a noisy
 play{f=Saw.kr(1);x=LagUD.kr(LFPulse.kr(5,0,0.48,4),0.7,0.8)*SinOsc.kr(TRand.kr(799,1020,Dust.kr(3)));Trig.kr(x,0.244)*SinOsc.ar(x*f!2,0,4)}
@@ -12,7 +11,29 @@ play{FreeVerb.ar(EnvGen.ar(Env([0.0,0.2,0.0],[0.7,0.5]).circle)*PMOsc.ar(4.4*Saw
 // ================================================================
 //:«Sonar tweet»
 {inf.do{{GVerb.ar(RLPF.ar(RHPF.ar(WhiteNoise.ar(0.1),870),880,0.0068)*EnvGen.kr(Env.perc(0.01,4),doneAction:2),10,3,0.9)}.play;5.wait}}.fork
-//:drum tweet
+//:
+{GVerb.ar(RLPF.ar(RHPF.ar(WhiteNoise.ar(0.1),870),880,0.0068)*EnvGen.kr(Env.perc(0.01,4),doneAction:2),10,3,0.9)}.play
+//:
+SynthDef("sonar_tweet", {
+    var src;
+    src = RLPF.ar(RHPF.ar(WhiteNoise.ar(0.1), \hpfreq.kr(870)), \lpfreq.kr(880), \lq.kr(0.0068)
+        *
+        EnvGen.kr(Env.perc(0.01, 4), doneAction: 2)
+    Out.ar(0, GVerb.ar(src, 10,3,0.9););
+}).add;
+//:
+{
+    loop: {
+        Synth("sonar_tweet");
+    }
+}.fork
+//:
+a = Synth("sonar_tweet");
+//:
+         a.set(\lpfreq, 12000);
+
+
+//:drum_tweet
 play{a=Impulse;tanh(a.kr(8).lag*Crackle.ar(LFSaw.kr(3).abs.lag*1.8)+GVerb.ar([a.kr(2)+a.kr(4,0.5)].lag*Blip.ar(4.9,7,0.4)!2,1,1)*5)}
 // ================================================================
 //:esoteric tweet
@@ -27,13 +48,13 @@ fork{loop{h=([33,38,40].choose.midicps)*(2**((0 .. 5).choose));play{Splay.ar({Si
 //: or more like a constant drone:
 fork{loop{h=([33,38,40].choose.midicps)*(2**((0 .. 4).choose));play{Splay.ar({SinOsc.ar(exprand(h-(h/64),h+(h/64)),0,0.1)}!8)*LFGauss.ar(19,1/4,0,0,2)};0.25.wait}};
 //: primes
-fork{loop{h=(4 .. 100).choose.nthPrime*(2**(0..3).choose);play{Splay.ar({SinOsc.ar(exprand(h-(h/256),h+(h/256)),0,0.1)}!64)*LFGauss.ar(19,1/4,0,0,2)};2.wait}}; 
+fork{loop{h=(4 .. 100).choose.nthPrime*(2**(0..3).choose);play{Splay.ar({SinOsc.ar(exprand(h-(h/256),h+(h/256)),0,0.1)}!64)*LFGauss.ar(19,1/4,0,0,2)};2.wait}};
 //: Fibonacci
-fork{loop{h=(List.fib(15).choose)*(2**(0..4).choose);play{Splay.ar({SinOsc.ar(exprand(h-(h/64),h+(h/64)),0,0.1)}!64)*LFGauss.ar(19,1/4,0,0,2)};2.wait}}; 
+fork{loop{h=(List.fib(15).choose)*(2**(0..4).choose);play{Splay.ar({SinOsc.ar(exprand(h-(h/64),h+(h/64)),0,0.1)}!64)*LFGauss.ar(19,1/4,0,0,2)};2.wait}};
 
 // but they were too long.
 // __________________________
-// inspired by http://sctweets.tumblr.com/post/8379573991/sinosc 
+// inspired by http://sctweets.tumblr.com/post/8379573991/sinosc
 // (http://soundcloud.com/rukano)
 // ================================================================
 //:Vocal Drone Tweet
@@ -84,7 +105,7 @@ play{a=SinOsc;0.1 * LeakDC.ar(a.ar(a.ar(0.31),a.ar(a.ar(0.21),a.ar(a.ar(0.11,a.a
 //: /* by  minkepatt */ - dup added by IZ
 (play{x=SinOsc.ar(gcd (441*SinOsc.ar(5),882*SinOsc.ar(3))); (x.distort % x).dup};)
 //: /* by  minkepatt */ - dup added by IZ
-(play{LFTri.ar(CombL.ar(Dust.kr(GrayNoise.ar)*44.1,1e-17,1e-6).round(441/3.5))};) 
+(play{LFTri.ar(CombL.ar(Dust.kr(GrayNoise.ar)*44.1,1e-17,1e-6).round(441/3.5))};)
 //: /* by  minkepatt */ - dup added by IZ
 (9.rand.do{{LFCub.ar(441/3+441*5.rand)*LFGauss.kr(0.25+2.25.rand.round(0.125)).dup;}.play})
 //: /* by  minkepatt */
@@ -96,7 +117,7 @@ play{a=SinOsc;0.1 * LeakDC.ar(a.ar(a.ar(0.31),a.ar(a.ar(0.21),a.ar(a.ar(0.11,a.a
 //: /* by  minkepatt */
 (play{var a,f,t;a=Dseq([1,8]*[2,0,0.5],inf);t=(Saw.kr([5,4]));f=Demand.kr(t,0,a)*[13,89];LFTri.ar(f)*0.2**Dust.ar(2)};)
 //: /* by  minkepatt */
-({PanB2.ar(Gendy1.ar(3,4,2,2,305,500,0.33)*LFNoise2.kr(0.2,0.5),Saw.kr(0.2,3))}.play;) 
+({PanB2.ar(Gendy1.ar(3,4,2,2,305,500,0.33)*LFNoise2.kr(0.2,0.5),Saw.kr(0.2,3))}.play;)
 //: /* by  minkepatt */
 ({PanB2.ar(Gendy1.ar(6,2,3,4,rrand(15,250),5000,0.1)*LFNoise2.kr(0.2,2),LFNoise0.kr(0.2))}.play;)
 // ================================================================
@@ -163,7 +184,7 @@ p={|f,a=5|GVerb.ar(LFPulse.ar(f)*a)+f};play{tanh(HPF.ar(p.(99-p.(1/2,20)*(1+p.(2
 //: /* by  nathaniel virgo */
 Ndef(\,{LPF.ar(x=DelayN.ar(LeakDC.ar(Ndef(\).ar,1-2e-6)*0.99,1,0.01)+Dust.ar(0.5!2);x+(Trig1.ar(x<(x.mean.lag(30)),4e-3)*0.05),800)}).play
 
-//: /* by  nathaniel virgo */
+//: /* by  nathaniel virgo */ must increase server memory allocation
 Ndef(\,{x=DelayL.ar(n=Ndef(\);n.ar,2,LFNoise0.kr(0.03*_!20)+1)+Blip.ar(0.5);LeakDC.ar(LPF.ar(x+x.mean*0.15,4e3)).sin});play{Splay.ar(n.ar)}
 
 //: /* by  nathaniel virgo */
@@ -364,7 +385,7 @@ play{Mix.fill(8,{a=LFDNoise1.kr(18);b=a.range(1e-4,0.1);AllpassC.ar(CombC.ar(FBS
 //: /* by  chad mckinney */ increase server memory allocation
 play{{|i|r=LFNoise2.ar(0.3,0.5,0.5);n=DelayC.ar(In.ar(i*r),1,i);Out.ar(i*r,Ringz.ar(n+Impulse.ar(),Pitch.kr(n)[0]*i,200).softclip)}!30};
 b
-//: /* by  pyoungryang ko */ 
+//: /* by  pyoungryang ko */
 play{Mix.fill(64,{Resonz.ar(Impulse.ar(0.1.rand,0.8,9.9.rand),9+99.rand.nthPrime*SinOsc.kr([1,1.7]*0.001).range([59,2],[2,11]),0.0004,33)})}
 
 //: /* by  johannes quint */ ??????????
@@ -629,10 +650,10 @@ play{a=LFPar;GVerb.ar(VarSaw.ar(a.ar(1,0,5,a.ar([0.05,0.04],0,50,160).round(50))
 x=0;{|i|Pbind(\dur,i+1/4,\lag,i/6/6,\octave,i+3,\legato,i+1/6,\degree,Pn(Plazy{x=x+1%6;Pseq(asDigits(x+1*142857))})).play}!6//#SuperCollider
 
 //: /* by  alexandra cardenas */
-{p=Pan2;n=LFNoise2;p.ar({Blip.ar(n.kr(0.1).range(12),n.kr(0.1).range(10,1200))}!8,0,0.2)}.play 
+{p=Pan2;n=LFNoise2;p.ar({Blip.ar(n.kr(0.1).range(12),n.kr(0.1).range(10,1200))}!8,0,0.2)}.play
 
 //: /* by  alexandra cardenas */
-play{n=LFDNoise3;Limiter.ar(Splay.ar(VarSaw.ar([n.kr(1).range(60,180),80,n.kr(2).range(70,120)])*n.ar(50).wrap2(n.kr(1.7)),1,1,0),0.5,0.01)} 
+play{n=LFDNoise3;Limiter.ar(Splay.ar(VarSaw.ar([n.kr(1).range(60,180),80,n.kr(2).range(70,120)])*n.ar(50).wrap2(n.kr(1.7)),1,1,0),0.5,0.01)}
 
 //: /* by  juan alzate romero */
 play{GVerb.ar(Blip.ar((Duty.kr(1/[1,2,4],0,Dseq([0,3,7,12,17]+24,inf))).midicps*[1,4,8],LFNoise1.kr(1/4,3,4)).sum,200,8)} // #sc
@@ -671,7 +692,7 @@ play{RandSeed.kr(1,5);e=ExpRand;Splay.ar(Decay2.ar(Impulse.ar({e.new(1,8).round/
 play{e=ExpRand;Splay.ar(Decay2.ar(Impulse.ar({e.new(1,8).round/3}!9),5e-3,{e.new(0.1,1)}!9,LFCub.ar({e.new(66,666).round(20)}!9)))}
 
 //: /* by  juan alzate romero */
-play{o=LFCub.kr(1/[24,8,12,16]);PitchShift.ar(LFPulse.ar(o[0]*50+100,0,0.1).lag(1/1000),o[3]*0.299+0.3,o[2]*8+8,o[1],o[0]*0.1+0.1)!2} 
+play{o=LFCub.kr(1/[24,8,12,16]);PitchShift.ar(LFPulse.ar(o[0]*50+100,0,0.1).lag(1/1000),o[3]*0.299+0.3,o[2]*8+8,o[1],o[0]*0.1+0.1)!2}
 
 //: /* by  juan alzate romero */
 play{o=LFPulse.kr(1/[4,7,13,19]);PitchShift.ar(LFPar.ar(o@0*1e3+1e3,0,0.1).lag(1/1000),o@3*0.299+0.3,o@2*2+2,o@1,o[0]*0.1+0.1)!2}
@@ -785,7 +806,7 @@ play{t=TDuty.kr(Dshuf([4,2,1]/8,inf));c=TChoose;Pan2.ar(SinOscFB.ar(c.kr(t,(50,7
 play{r=LFNoise0.kr(1/4,6,6).round.midiratio;Splay.ar({ToggleFF.ar(Impulse.ar(8.rand+1)).lag(1/99)*SinOsc.ar((50,100..800).choose*r)}!40)}
 
 //: /* by  juan alzate romero */
-fork{loop{h=[100,800,3000].choose;play{Splay.ar({SinOsc.ar(exprand(60,h),0,0.1)}!40)*LFGauss.ar(19,1/4,0,0,2)};8.wait}}; 
+fork{loop{h=[100,800,3000].choose;play{Splay.ar({SinOsc.ar(exprand(60,h),0,0.1)}!40)*LFGauss.ar(19,1/4,0,0,2)};8.wait}};
 
 //: /* by  juan alzate romero */
 play{l=LFNoise2;RLPF.ar(Crackle.ar,SpecPcile.kr(FFT(LocalBuf(1024),LFGauss.ar(1/[6,8,20].choose,0.01)),0.5),l.kr(1/8,0.1,0.15),2).fold2!2}
@@ -797,7 +818,7 @@ play{a=Decay2.ar(Impulse.ar(2),1e-4)*SinOsc.ar(40);Compander.ar(Blip.ar([40,40.5
 play{e=ExpRand;Splay.ar(Decay2.ar(Impulse.ar({e.new(1,8).round/3}!9),5e-3,{e.new(0.1,1)}!9,LFCub.ar({e.new(66,666).round(20)}!9)))}
 
 //: /* by  juan alzate romero */
-play{o=LFCub.kr(1/[24,8,12,16]);PitchShift.ar(LFPulse.ar(o[0]*50+100,0,0.1).lag(1/1000),o[3]*0.299+0.3,o[2]*8+8,o[1],o[0]*0.1+0.1)!2} 
+play{o=LFCub.kr(1/[24,8,12,16]);PitchShift.ar(LFPulse.ar(o[0]*50+100,0,0.1).lag(1/1000),o[3]*0.299+0.3,o[2]*8+8,o[1],o[0]*0.1+0.1)!2}
 
 //: /* by  redfrik */
 play{f=LFPar.ar(1/14).round*20+80;Splay.ar(LFPar.ar({|i|[i+1*f,i*f+(i+1/3)]}!4)>BrownNoise.ar(Pulse.ar({|i|i+1}!4,0.35))/3)}//#SuperCollider
@@ -829,7 +850,7 @@ play{k=0.5;j=LFSaw;n=j.kr(2,0,0.48,k);CombC.ar(Splay.ar({|i|Formlet.ar(Impulse.a
 play{k=0.5;j=LFSaw;n=j.kr(2,0,0.48,k);BRF.ar(Splay.ar({|i|Formlet.ar(Impulse.ar(n*15),j.kr(k/(i+1),i,n*100),0.1*n,k,k)}!10,n),n*100,n)};
 //: ================================================================
 //:«fractal tweets» by aucotsi
-// I was looking some fractal structures, with a friend who studies the maths, and we found a // simple algorithm. So i made some tweets with the formula. 
+// I was looking some fractal structures, with a friend who studies the maths, and we found a // simple algorithm. So i made some tweets with the formula.
 // 0.1 -> 0.01 IZ
 r{inf.do{|i|a=i.asInteger.rand2;if(a.even){a=a/2}{a=a*3+1};play{SinOsc.ar(a,0,0.01)!2*EnvGen.ar(Env.perc,1,1,0,1,2)};0.07.wait;}}.play
 //: 0.1 -> 0.01 IZ
@@ -866,7 +887,7 @@ a = { | rateL = 5, rateR = 6, blipMul = 100, blipAdd = 50, fMul = 50, kMul = 1 |
 }.play
 )
 
-//: Set parameters for changing sound here: 
+//: Set parameters for changing sound here:
 a.set(\kMul, 0.01);
  //:
 a.set(\rateL, 10);
