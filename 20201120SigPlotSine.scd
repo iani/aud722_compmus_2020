@@ -5,13 +5,32 @@
 (0..10).size;
 //:(SImple, basic, or interesting) things you can do with a signal.
 (1..10).plot; // plot
-()
+(1..10).reverse.plot // reverse
+(1..10).rotate(5).plot //: rotate
 
+//:normalize: adapt to range from 0 to 1
+(1..10).normalize.plot; // plot
+//:reverse
+(1..10).reverse.plot; // plot
+//: Plot envelopes
+Env.perc.plot;
+//:Plot signals from synth
+{ SinOsc.ar(1) }.plot(1);
 
-// plot an array from -100 to 100;
+//:================================================================
+//:21 Nov 2020 21:45 Explore phases
+//:rotate several times to understand rotate better
+10    do:   { | i | (1..10).rotate(i).plot;   };
+//:rotate several times and collect in one plot.
+var data;
+data = (1..1000).normalize;
+({ | i | data.rotate(i * 100); } ! 10).plot;
 
+//:as above, but collect sines
+var data;
+data = (1..1000).normalize * 2pi;
+({ | i | data.rotate(i * 100).sin; } ! 11).plot;
 
-
-a = (-100..100); // store an array of intergers from -100 to 100 into a to work with
-(-100..100).size.postln; // 201 elements in the array.
-(-100..100).plot;        // plot the array
+//:With UGens
+{ SinOsc.ar(1, pi) }.plot(1);
+{ SinOsc.ar(1, pi / 2) }.plot(1);
